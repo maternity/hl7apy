@@ -19,6 +19,8 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import print_function
+
 import sys
 import os
 import re
@@ -35,7 +37,7 @@ class XSDParser(object):
         try:
             methods = [getattr(self, p) for p in to_parse]
         except Exception, ex:
-            print "Invalid parsing options.", ex
+            print("Invalid parsing options.", ex)
             sys.exit(1)
         for m in methods:
             m()
@@ -96,13 +98,13 @@ class XSDParser(object):
             with open(schema_path) as xml_file:
                 data = xml_file.read()
         except Exception, ex:
-            print "Error occurred while opening the XSD file: ", ex
+            print("Error occurred while opening the XSD file: ", ex)
             sys.exit(1)
 
         try:
             f = objectify.XML(data)
         except Exception, ex:
-            print "Invalid XSD file: ", schema_file, ex
+            print("Invalid XSD file: ", schema_file, ex)
             sys.exit(1)
 
         try:
@@ -164,7 +166,7 @@ class XSDParser(object):
                 output_file.write("{0} = ".format(constant_name.upper()))
                 pprint.pprint(module_content, output_file)
         except Exception, ex:
-            print "Error occurred while saving the output to: ", module_name, ex
+            print("Error occurred while saving the output to: ", module_name, ex)
             sys.exit(1)
 
 
