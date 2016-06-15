@@ -21,10 +21,15 @@
 
 from __future__ import print_function
 
-import SocketServer
 import re
+import sys
 
 from actor import LIP
+
+if sys.version < '3': # pragma: no cover
+    from SocketServer import StreamRequestHandler, TCPServer
+else: # pragma: no cover
+    from socketserver import StreamRequestHandler, TCPServer
 
 #: MLLP encoding chars
 SB = "\x0b"
@@ -49,7 +54,7 @@ class MLLProtocol(object):
             message = matched.groups()[0]
         return message
 
-class MLLPServer(SocketServer.StreamRequestHandler):
+class MLLPServer(StreamRequestHandler):
     """
     Simplistic implementation of a TCP server implementing the MLLP protocol
 
@@ -76,5 +81,5 @@ class MLLPServer(SocketServer.StreamRequestHandler):
 if __name__ == "__main__":
     HOST, PORT = "localhost", 6000
 
-    server = SocketServer.TCPServer((HOST, PORT), MLLPServer)
+    server = TCPServer((HOST, PORT), MLLPServer)
     server.serve_forever()

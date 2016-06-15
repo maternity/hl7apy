@@ -21,11 +21,24 @@
 
 import re
 import socket
-from SocketServer import StreamRequestHandler, TCPServer, ThreadingMixIn
+import sys
 
 from hl7apy.parser import get_message_type
 from hl7apy.exceptions import HL7apyException, ParserError
 
+if sys.version < '3': # pragma: no cover
+    from SocketServer import StreamRequestHandler, TCPServer, ThreadingMixIn
+    def s(x):
+        return x
+    def b(x):
+        return x
+else: # pragma: no cover
+    from socketserver import StreamRequestHandler, TCPServer, ThreadingMixIn
+    def s(x):
+        return x.decode()
+    import codecs
+    def b(x):
+        return codecs.latin_1_encode(x)[0]
 
 class UnsupportedMessageType(HL7apyException):
     """
@@ -63,7 +76,7 @@ class _MLLPRequestHandler(StreamRequestHandler):
     def handle(self):
         end_seq = "{}{}".format(self.eb, self.cr)
         try:
-            line = self.request.recv(3)
+            line = s(self.request.recv(3))
         except socket.timeout:
             self.request.close()
             return
@@ -74,7 +87,7 @@ class _MLLPRequestHandler(StreamRequestHandler):
 
         while line[-2:] != end_seq:
             try:
-                char = self.rfile.read(1)
+                char = s(self.rfile.read(1))
                 if not char:
                     break
                 line += char
@@ -90,7 +103,7 @@ class _MLLPRequestHandler(StreamRequestHandler):
                 self.request.close()
             else:
                 # encode the response
-                self.wfile.write(response)
+                self.wfile.write(b(response))
         self.request.close()
 
     def _extract_hl7_message(self, msg):

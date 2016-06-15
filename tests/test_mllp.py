@@ -20,11 +20,24 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import socket
+import sys
 import unittest
 from threading import Thread
 
 from hl7apy.mllp import MLLPServer, AbstractHandler
 from hl7apy.mllp import InvalidHL7Message, UnsupportedMessageType
+
+if sys.version < '3': # pragma: no cover
+    def b(x):
+        return x
+    def s(x):
+        return x
+else: # pragma: no cover
+    import codecs
+    def b(x):
+        return codecs.latin_1_encode(x)[0]
+    def s(x):
+        return x.decode()
 
 
 HOST = 'localhost'
@@ -117,13 +130,13 @@ class TestMLLPWithErrorHandler(unittest.TestCase):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
             sock.connect((HOST, PORT))
-            sock.sendall(msg)
+            sock.sendall(b(msg))
             res = []
             while True:
                 received = sock.recv(1)
                 if not received:
                     break
-                res.append(received)
+                res.append(s(received))
         finally:
             sock.close()
 
@@ -173,13 +186,13 @@ class TestMLLPWithoutErrorHandler(unittest.TestCase):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
             sock.connect((HOST, PORT + 1))
-            sock.sendall(msg)
+            sock.sendall(b(msg))
             res = []
             while True:
                 received = sock.recv(1)
                 if not received:
                     break
-                res.append(received)
+                res.append(s(received))
         finally:
             sock.close()
 

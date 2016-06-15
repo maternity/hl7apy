@@ -28,7 +28,11 @@ import re
 from optparse import OptionParser
 from lxml import objectify
 import collections
-import cPickle
+
+if sys.version >= '3': # pragma: no cover
+    import pickle
+else: # pragma: no cover
+    import cPickle as pickle
 
 
 class ProfileParser(object):
@@ -147,7 +151,7 @@ class ProfileParser(object):
             content = self.parse_profile(f)
             file_path = os.path.join(self.output_path, filename)
             with open(file_path, "wb") as output_file:
-                cPickle.dump(dict(content), output_file)
+                pickle.dump(dict(content), output_file)
 
     def parse_profile(self, profile_file):
         """

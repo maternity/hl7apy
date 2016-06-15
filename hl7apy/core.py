@@ -28,6 +28,7 @@ import collections
 import datetime
 from itertools import takewhile
 import importlib
+import sys
 
 from hl7apy import get_default_version, get_default_encoding_chars, \
     get_default_validation_level, check_validation_level, \
@@ -40,6 +41,9 @@ from hl7apy.exceptions import ChildNotFound, ChildNotValid, \
 from hl7apy.factories import datatype_factory
 from hl7apy.base_datatypes import BaseDataType
 from hl7apy.consts import MLLP_ENCODING_CHARS
+
+if sys.version >= '3': # pragma: no cover
+    basestring = str
 
 
 def is_base_datatype(datatype, version=None):
@@ -806,7 +810,7 @@ class Element(object):
     def _find_structure(self, reference=None):
         if self.name is not None:
             structure = ElementFinder.get_structure(self, reference)
-            for k, v in structure.iteritems():
+            for k, v in structure.items():
                 setattr(self, k, v)
 
     def _is_valid_child(self, child):
@@ -903,7 +907,7 @@ class SupportComplexDataType(Element):
                 datatype not in ('varies', None, self.datatype):
             reference = load_reference(datatype, 'Component', self.version)
             structure = ElementFinder.get_structure(self, reference)
-            for k, v in structure.iteritems():
+            for k, v in structure.items():
                 setattr(self, k, v)
 
         if hasattr(self, 'children') and len(self.children) >= 1:
@@ -1438,7 +1442,7 @@ class Field(SupportComplexDataType):
 
     def _get_children(self, trailing=False):
         if self.datatype == 'varies':
-            children = [self.children.indexes['VARIES_{0}'.format(i+1)] for i in xrange(len(self.children))]
+            children = [self.children.indexes['VARIES_{0}'.format(i+1)] for i in range(len(self.children))]
             children = _remove_trailing(children)
             children.extend([[c] for c in self.children if c.is_unknown()])
             return children
@@ -1699,7 +1703,7 @@ class Segment(Element):
     def _get_children(self, trailing=False):
         children = self.children.get_ordered_children()
         if self.allow_infinite_children:
-            for i in xrange(self._last_allowed_child_index + 1, self._last_child_index + 1):
+            for i in range(self._last_allowed_child_index + 1, self._last_child_index + 1):
                 children.append(self.children.indexes.get('{}_{}'.format(self.name, i), None))
         children.extend([c for c in self.children.get_children() if c[0].name in (None, 'ST')])
         if not trailing:
