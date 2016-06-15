@@ -152,7 +152,7 @@ def parse_messages(directory, validation_level=VL.STRICT, find_groups=True, limi
                                              msg.msh.msh_9.to_er7(), msg_end - msg_start))
                 except MessageProfileNotFound:
                     continue
-                except InvalidEncodingChars:
+                except InvalidEncodingChars as e:
                     if mp is None:
                         exceptions[vl].append({'type': 'parsing', 'ex': e, 'file_name': f, 'msg': msg_str})
                         if vl == VL.STRICT:

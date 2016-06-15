@@ -22,7 +22,7 @@
 import unittest
 from hl7apy.core import Message, Group, Segment, Field, Component, SubComponent
 from hl7apy.parser import parse_segment, parse_message
-from hl7apy.base_datatypes import *
+from hl7apy.base_datatypes import ST
 from hl7apy.exceptions import InvalidHighlightRange
 from hl7apy.consts import MLLP_ENCODING_CHARS, VALIDATION_LEVEL
 
@@ -101,8 +101,6 @@ class ToStringTestCase(unittest.TestCase):
         """
         It tests the to_er7 message for an empty message
         """
-        from datetime import datetime
-
         msg = Message('RSP_K11')
         self.assertRegexpMatches(msg.to_er7(), 'MSH|^~\\&|||||d+|||||2.5')
 

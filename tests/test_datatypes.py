@@ -354,7 +354,7 @@ class TestFT(unittest.TestCase):
 
     def test_FT_maxlength(self):
         ft_str = 'a' * (FT(' ').max_length + 1)
-        ft = FT(ft_str) #no exception is raised here
+        FT(ft_str) #no exception is raised here
 
     def test_FT_field_escaping(self):
         ft = FT('|field|')
