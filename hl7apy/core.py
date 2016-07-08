@@ -905,10 +905,11 @@ class SupportComplexDataType(Element):
 
         if not is_base_datatype(datatype, self.version) and \
                 datatype not in ('varies', None, self.datatype):
-            reference = load_reference(datatype, 'Component', self.version)
-            structure = ElementFinder.get_structure(self, reference)
-            for k, v in structure.items():
-                setattr(self, k, v)
+            if (getattr(self, 'datatype', None) and self.datatype != datatype) or getattr(self, 'reference', ('leaf'))[0] == 'leaf':
+                reference = load_reference(datatype, 'Component', self.version)
+                structure = ElementFinder.get_structure(self, reference)
+                for k, v in structure.items():
+                    setattr(self, k, v)
 
         if hasattr(self, 'children') and len(self.children) >= 1:
             if is_base_datatype(self.datatype, self.version):
