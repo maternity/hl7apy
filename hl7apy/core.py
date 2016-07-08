@@ -543,9 +543,9 @@ class ElementFinder(object):
 
         :return: a dictionary containing the structure data
         """
-        data = {
-            'reference': reference
-        }
+        data = collections.OrderedDict([
+            ('reference', reference),
+        ])
         if reference[0] == 'mp':
             reference = reference[1:]
             is_profile = True
@@ -592,9 +592,9 @@ class ElementFinder(object):
                 datatype, long_name, table = reference[1:]
             else:
                 datatype, long_name, table, max_length = reference[5:]
-            data['datatype'] = datatype
             data['table'] = table
             data['long_name'] = long_name
+            data['datatype'] = datatype
         return data
 
 
