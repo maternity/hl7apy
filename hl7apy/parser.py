@@ -738,6 +738,10 @@ def _find_group(segment, search_data, validation_level=None):
             return _find_group(segment, search_data, validation_level)
         search_data['indexes'][-1] = search_index
         parent = search_data['parents'][-1]
+        if parent.classname == 'Group':
+            # reparse using the right reference
+            segment = parse_segment(segment.to_er7(), segment.version, segment.encoding_chars, validation_level,
+                                          structure['structure_by_name'][segment.name]['ref'])
         parent.add(segment)
     return search_index
 
