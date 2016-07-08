@@ -1880,8 +1880,9 @@ class Message(Group):
         if encoding_chars is None:
             encoding_chars = get_default_encoding_chars()
 
-        # TODO: Change it to support message profiles
-        self.msh = Segment('MSH', version=self.version, validation_level=self.validation_level)
+        self.msh = Segment('MSH', version=self.version,
+            reference=self.find_child_reference('MSH')['ref'],
+            validation_level=self.validation_level)
         self.encoding_chars = encoding_chars
         self.msh.msh_7 = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
         self.msh.msh_12 = self.version

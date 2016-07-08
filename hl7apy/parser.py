@@ -328,10 +328,9 @@ def parse_field(text, name=None, version=None, encoding_chars=None, validation_l
             field = Field(name, version=version, validation_level=validation_level, reference=reference)
         else:
             field = Field(version=version, validation_level=validation_level, reference=reference)
-
     if name in ('MSH_1', 'MSH_2'):
-        s = SubComponent(datatype='ST', value=text, validation_level=validation_level, version=version)
-        c = Component(datatype='ST', validation_level=validation_level, version=version)
+        s = SubComponent(datatype='ST', value=text, validation_level=validation_level, version=version, reference=reference)
+        c = Component(datatype='ST', validation_level=validation_level, version=version, reference=reference)
         c.add(s)
         field.add(c)
     else:
