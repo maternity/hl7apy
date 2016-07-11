@@ -628,7 +628,7 @@ def get_message_info(content):
             try:
                 message_structure = "{0}_{1}".format(message_type[0], message_type[1])
             except IndexError:
-                message_structure = None
+                message_structure = message_type[0]
 
     # look for MSH.12 field containing the message's version
     try:
