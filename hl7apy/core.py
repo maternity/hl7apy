@@ -1547,7 +1547,7 @@ class Segment(Element):
     child_classes = (Field,)
     child_parser = ('parse_field', 'parse_fields')
     cls_attrs = Element.cls_attrs + ['allow_infinite_children', '_last_allowed_child_index',
-                                     '_last_child_index']
+                                     '_last_child_index', 'original_er7']
 
     def __init__(self, name=None, parent=None, reference=None, version=None,
                  validation_level=None, traversal_parent=None):

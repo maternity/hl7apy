@@ -183,12 +183,14 @@ def parse_segment(text, version=None, encoding_chars=None, validation_level=None
     encoding_chars = _get_encoding_chars(encoding_chars)
     validation_level = _get_validation_level(validation_level)
 
+    original = text
     segment_name = text[:3]
     text = text[4:] if segment_name != 'MSH' else text[3:]
     segment = Segment(segment_name, version=version, validation_level=validation_level,
                       reference=reference)
     segment.children = parse_fields(text, segment_name, version, encoding_chars, validation_level,
                                     segment.structure_by_name, segment.allow_infinite_children)
+    segment.original_er7 = original
     return segment
 
 
@@ -740,7 +742,7 @@ def _find_group(segment, search_data, validation_level=None):
         parent = search_data['parents'][-1]
         if parent.classname == 'Group':
             # reparse using the right reference
-            segment = parse_segment(segment.to_er7(), segment.version, segment.encoding_chars, validation_level,
+            segment = parse_segment(segment.original_er7, segment.version, segment.encoding_chars, validation_level,
                                           structure['structure_by_name'][segment.name]['ref'])
         parent.add(segment)
     return search_index
